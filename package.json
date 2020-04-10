@@ -1,0 +1,22 @@
+{
+  "name": "stockchamp",
+  "version": "1.0.0",
+  "description": "CSCI3230 Final Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuangMinhHuynh/StockChamp.git"
+  },
+  "keywords": [
+    "web-dev"
+  ],
+  "author": "Minh Huynh, Ken Zhou, Anushan Vimalathasan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuangMinhHuynh/StockChamp/issues"
+  },
+  "homepage": "https://github.com/QuangMinhHuynh/StockChamp#readme"
+}
