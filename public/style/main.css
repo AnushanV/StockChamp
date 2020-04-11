@@ -1,0 +1,21 @@
+.input {
+    border-radius: 50px;
+}
+  
+.button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    min-width: 150px;
+}
+
+.login-logo {
+    margin: 0 auto;
+    margin-bottom: 50px;
+    max-height: 100px;
+
+}
+
+.columns{
+    margin: 0px;
+    height: 100%;
+}
