@@ -33,6 +33,7 @@ app.get('/stockPage', (request, response)=>{
 	response.render('stockPage', {});
 });
 
+
 // resolve log in
 app.post('/', (request, response)=>{
 	console.log(request.body.username);
@@ -47,6 +48,7 @@ app.post('/', (request, response)=>{
 });
 
 app.set('port', 3000);
+
 app.listen(app.get('port'), ()=>{
 	console.log('Listening on port ' + app.get('port'));
 });
