@@ -17,6 +17,14 @@ app.get('/stockPage', (request, response)=>{
 	response.render('stockPage', {});
 });
 
+app.get('/signup', (request, response)=>{
+	response.render('signup', {});
+});
+
+app.get('/login', (request, response)=>{
+	response.render('login', {});
+});
+
 app.set('port', 3000);
 app.listen(app.get('port'), ()=>{
 	console.log('Listening on port ' + app.get('port'));
