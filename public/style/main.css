@@ -1,21 +1,11 @@
-.input {
-    border-radius: 50px;
-}
-  
-.button {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    min-width: 150px;
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
 
-.login-logo {
-    margin: 0 auto;
-    margin-bottom: 50px;
-    max-height: 100px;
-
-}
-
-.columns{
-    margin: 0px;
-    height: 100%;
+.hero {
+    background-image: url("../images/stock.png");
+    background-color: #cccccc;
 }
