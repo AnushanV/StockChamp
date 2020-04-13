@@ -1,0 +1,47 @@
+doctype html
+head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible' content='ie=edge')
+    title StockChamp: Stock Page
+    script(src='http://code.jquery.com/jquery-latest.min.js' type='text/javascript')
+    script(src='https://d3js.org/d3.v5.min.js' type='text/javascript')
+    script(defer='' src='https://use.fontawesome.com/releases/v5.3.1/js/all.js' type='text/javascript')
+    script(src='/../scripts/stockPage.js' type='text/javascript')
+    link(rel='stylesheet' href='/style/stockPage.css')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css')
+div(class="title") StockChamp Header Goes Here
+div(class='columns')
+    div(id="newsColumn" class="column is-one-third")
+    div(id="chartColumn" class="column is-two-fifths")
+        div(id="buttonTitle") Select Time Intervals for Graph
+        div(class= "buttons")
+            button(id="minButton" class= "button is-info is-light") 1 Minute
+            button(id="hourButton" class= "button is-info is-light") 1 Hour
+            button(id="dayButton" class= "button is-info is-light") 1 Day
+            button(id="weekButton" class= "button is-info") 1 Week
+            button(id="monthButton" class= "button is-info 1") Month
+        div(id="stockChart")
+        div
+        table(class="table is-fullwidth is-bordered is-striped")
+            thead
+            tr
+                th(id="selectedDate") Date
+            tbody
+            tr
+                td Opening Price
+                td(id="openCell")
+            tr
+                td High Price
+                td(id="highCell")
+            tr
+                td Low Price
+                td(id="lowCell")
+            tr
+                td Closing Price
+                td(id="closeCell")
+            tr
+                td Volume
+                td(id="volumeCell")
+    div(id="conversation" class="column")
+        | conversation

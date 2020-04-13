@@ -5,18 +5,66 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-   <title>Grade Distribution</title>
+   <title>StockChamp: Stock Page</title>
 
    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
    <script src="https://d3js.org/d3.v5.min.js" type="text/javascript"></script>
    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" type="text/javascript"></script>
-   <script src="../scripts/stockPage.js" type="text/javascript"></script>
+   <script src="/scripts/stockPage.js" type="text/javascript"></script>
 
+   <link rel="stylesheet" href="../public/style/stockPage.css" />
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" />
+
 </head>
 <body>
-   <div class="title">Stocks</div>
-   <div id="search"></div>
-   <div id="stockChart"></div>
+    <div class="title">StockChamp Header Goes Here</div>
+    <div class = "columns">
+        <div class = "column is-one-third" id="newsColumn"></div>
+        <div class = "column is-two-fifths" id = "chartColumn">
+            <div id="buttonTitle">Select Time Intervals for Graph</div>
+            <div class = "buttons">
+                <button class = "button is-info is-light" id= "minButton">1 Minute</button>
+                <button class = "button is-info is-light" id= "hourButton">1 Hour</button>
+                <button class = "button is-info is-light" id= "dayButton">1 Day</button>
+                <button class = "button is-info" id= "weekButton">1 Week</button>
+                <button class = "button is-info" id= "monthButton">1 Month</button>
+            </div>
+            <div id="stockChart"></div>
+            <div>
+                <table class="table is-fullwidth is-bordered is-striped">
+                    <thead>
+                        <tr>
+                            <th id= "selectedDate">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Opening Price</td>
+                            <td id= "openCell"></td>
+                        </tr>
+                        <tr>
+                            <td>High Price</td>
+                            <td id= "highCell"></td>
+                        </tr>
+                        <tr>
+                            <td>Low Price</td>
+                            <td id= "lowCell"></td>
+                        </tr>
+                        <tr>
+                            <td>Closing Price</td>
+                            <td id= "closeCell"></td>
+                        </tr>
+                        <tr>
+                            <td>Volume</td>
+                            <td id= "volumeCell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class = "column">
+           conversation
+        </div>
+    </div>
 </body>
 </html>
