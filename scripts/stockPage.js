@@ -146,7 +146,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         .attr('x', (width) / 2)
         .attr('y', 0)
         .attr('text-anchor', 'middle')
-        .text(`${apiSymbol} Closing Prices`);
+        .text(`${apiSymbol} Stock Closing Prices`);
 
     //read data from Alphavantage api
     fetch(apiLink)
@@ -195,6 +195,28 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         x.domain(d3.extent(stockData, function(d) { return d.date; }));
         y.domain(d3.extent(stockData, function(d) { return d.close; }));
         
+        //add x axis and label to graph
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height + 30)
+            .attr('text-anchor', 'middle')
+            .text('Time');
+
+        //add y axis and label to graph
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        svg.append('text')
+            .attr('x', -height/2)
+            .attr('y', -40)
+            .attr('transform', 'rotate(-90)')
+            .attr('text-anchor', 'middle')
+            .text('Price (USD)');
+
         //create gradient for graph (green -> white -> red)
         var linearGradient = svg.append("linearGradient")
             .attr("id", "linear-gradient")
@@ -272,17 +294,17 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             var dateString = date.toString().substring(0,16);
 
             //change location of text depending on position so it does not get cut off
-            var xMod = (i > stockData.length/2) ? -200 : 0;
+            var xMod = (i > stockData.length/2) ? -200 : 10;
             var yModDate;
             var yModClose;
             var fillColour = "black";
             if (selectedData.close > avgClose){
-                yModDate = 50;
-                yModClose = 35;
+                yModDate = 40;
+                yModClose = 25;
             }
             else{
-                yModDate = -30;
-                yModClose = -45;
+                yModDate = -20;
+                yModClose = -35;
             }
             
             //store x and y of text
@@ -340,28 +362,6 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
     .catch(function(error) { //error reading api
         console.log(error);
     });   
-    
-    //add x axis and label to graph
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-    
-    svg.append('text')
-        .attr('x', width / 2)
-        .attr('y', height + 30)
-        .attr('text-anchor', 'middle')
-        .text('Time');
-
-    //add y axis and label to graph
-    svg.append("g")
-        .call(d3.axisLeft(y));
-    
-    svg.append('text')
-        .attr('x', -100)
-        .attr('y', height)
-        .attr('transform', 'rotate(-90)')
-        .attr('text-anchor', 'middle')
-        .text('Count');
 }
 
 var buildNewsColumn = function(apiSymbol){
