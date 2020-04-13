@@ -9,3 +9,12 @@
     background-image: url("../images/stock.png");
     background-color: #cccccc;
 }
+
+.columns{
+    margin: 0px;
+    height: 100%;
+}
+
+#logo{
+	padding-right: 5rem;
+}

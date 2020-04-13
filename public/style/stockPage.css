@@ -7,6 +7,10 @@
     padding-left: 1rem;
 }
 
+#buttonTitle{
+    text-align: center;
+}
 .card{
     padding:0.5rem;
 }
+
