@@ -116,16 +116,26 @@ app.get('/stockPage', (request, response)=>{
 
 
 // resolve log in
-app.post('/', (request, response)=>{
-	console.log(request.body.username);
-	console.log(request.body.password);
+app.post('/loginProcess', (request, response)=>{
+	let username = request.body.username;
+	let password = request.body.password;
+
+	User.find({username: username}).then(function(results) {
+		if (results.length == 0) {
+		  response.render('login', {systemMessage: 'Incorrect Username!'});
+		} else {
+		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
+			response.render('login', {systemMessage: username});
+		  }else {
+			response.render('login', {systemMessage: 'Incorrect Password!'});
+		  }
+		}
+	  });
 	
 	// TODO: check credentials and move to main page if valid
 //	response.render('login', {
 //		verification: false
 //	})
-	
-	response.redirect('/stockPage');
 });
 
 app.set('port', 3000);
