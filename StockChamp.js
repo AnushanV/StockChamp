@@ -47,7 +47,6 @@ var userSchema = new Schema({
             unique: true,
             index: true},
   hashedPassword: String,
-  isSub: {type: Boolean, default: false},
   stock1: {type: String, default: ''},
   stock2: {type: String, default: ''},
   stock3: {type: String, default: ''}
@@ -81,7 +80,6 @@ app.post('/signupProcess', (request, response) =>{
 
 	var newUser = new User({username: username,
 		hashedPassword: hashedPassword,
-		isSub: false,
 		stock1: '',
 		stock2: '',
 		stock3: ''});
