@@ -47,10 +47,10 @@ var userSchema = new Schema({
             unique: true,
             index: true},
   hashedPassword: String,
-  isSub: { type: Boolean, default: false},
-  stock1: String,
-  stock2: String,
-  stock3: String
+  isSub: {type: Boolean, default: false},
+  stock1: {type: String, default: ''},
+  stock2: {type: String, default: ''},
+  stock3: {type: String, default: ''}
 }, {collection: 'users'});
 var User = mongoose.model('users', userSchema);
 
@@ -63,12 +63,52 @@ app.get('/', (request, response)=>{
 app.get('/signup', (request, response)=>{
 	let username = request.body.username;
 	console.log(username);
-	response.render('signup', {});
+	response.render('signup', {systemMessage: ''});
 });
 
 // resolve sign up process
-app.post('/signup', (request, response) =>{
-	//TODO: check if username and email are taken and add to accounts if it hasn't
+app.post('/signupProcess', (request, response) =>{
+	let username = request.body.username;
+	let password = request.body.password;
+	let hashedPassword = bcrypt.hashSync(password);
+
+	
+	if (username == null || password == null
+		|| username == "" || password == "") {
+		response.render('signup', {systemMessage: 'Please enter both Username and Password'});
+		response.redirect('/signup');
+	}
+
+	var newUser = new User({username: username,
+		hashedPassword: hashedPassword,
+		isSub: false,
+		stock1: '',
+		stock2: '',
+		stock3: ''});
+
+		//Check if user already exist
+		User.find({username: username}).then(function(results){
+			if (results.length > 0) {
+			  response.render('signup', {systemMessage: 'This username already exists'});
+			} else {
+			  //username unavailable
+			  newUser.save(function(error) {
+				if (error) {
+				console.log('Unable to Sign Up: ' + error);
+				respone.render('signup', {systemMessage: 'Unable to Sign Up'});
+				} else {
+				response.render('login', {systemMessage: 'Successfully Sign Up!'});
+				}
+			})
+		  }
+
+		
+		});
+	//TODO: check if username are taken and add to database if it hasn't
+	//	response.render('signup', {
+//		verification: false
+//	})
+
 });
 
 // change to stock page

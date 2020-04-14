@@ -19,8 +19,7 @@ body
 								img(src="images/logo.png" class="logo")
 							
 							form(method="post")
-								if(verification == false)
-									a(class="errorMessage") Login credentials are incorrect
+								a= systemMessage
 								
 								p(class="control has-icon")
 									i(class="fa fa-user")

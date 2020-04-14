@@ -18,22 +18,21 @@ body
 							h1(class="title")
 								img(src="images/logo.png" class="logo")
 							
-							p(class="control has-icon")
-								i(class="fa fa-user")
-								input(class="input" type="text" name="username" placeholder="Username")
-							
-							p(class="control has-icon")
-								i(class="fa fa-envelope")
-								input(class="input" type="text" name="email" placeholder="E-Mail")
-							
-							p(class="control has-icon")
-								i(class="fa fa-lock")
-								input(class="input" type="password" name="password" placeholder="Password")
-							
-							p(class="has-text-centered")
-								a(href="/") Already have an account? Log in now!
-							
-							p(class="control")
-								button(class="button is-primary is-medium is-fullwidth")
-									i(class="fa fa-sign-in")
-									a Sign Up
+							form(action="/signupProcess" method="post")
+								a= systemMessage
+									
+								p(class="control has-icon")
+									i(class="fa fa-user")
+									input(class="input" type="text" name="username" placeholder="Username")
+									
+								p(class="control has-icon")
+									i(class="fa fa-lock")
+									input(class="input" type="password" name="password" placeholder="Password")
+								
+								p(class="has-text-centered")
+									a(href="/signup") Already have an account? Log In here!
+								
+								p(class="control")
+									button(class="button is-primary is-medium is-fullwidth")
+										i(class="fa fa-sign-in")
+										a Sign Up
