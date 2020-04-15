@@ -81,6 +81,8 @@ function buildPage(userData){
         .catch(function(error) {
             console.log(error);
         });
+
+        location.reload(true);
     });
 }
 
