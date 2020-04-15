@@ -160,7 +160,8 @@ app.post('/loginProcess', (request, response)=>{
 		  	response.render('login', {systemMessage: 'Incorrect Username!'});
 		} else {
 		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-			currentUser = results;
+
+			//console.log(results[0].stock3);
 			request.session.username = username;
 			request.session.stock1 = results[0].stock1;
 			request.session.stock2 = results[0].stock2;
