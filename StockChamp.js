@@ -114,6 +114,11 @@ app.get('/stockPage', (request, response)=>{
 	response.render('stockPage', {});
 });
 
+// change to search page
+app.get('/searchPage', (request, response)=>{
+	response.render('searchPage', {});
+});
+
 
 // resolve log in
 app.post('/loginProcess', (request, response)=>{
