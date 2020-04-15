@@ -119,11 +119,11 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
     var volumeCell = document.getElementById("volumeCell");
 
     //find dimensions of graph
-    
     var margin = {top: 20, right: 60, bottom: 30, left: 80},
     width = chartColumn.offsetWidth - margin.left - margin.right,
     height = window.outerHeight/2.5 - margin.top - margin.bottom;
     
+    var graphClicked = false; //used to check if the graph has been clicked
 
     //set ranges of axes
     var x = d3.scaleTime().range([0, width]);
@@ -272,7 +272,8 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             .attr('height', height)
             .on('mouseover', showDetails)
             .on('mousemove', followCursor)
-            .on('mouseout', hideDetails);
+            .on('mouseout', hideDetails)
+            .on('mousedown', pauseCursor);
         
         //used to find circle placement
         var bisect = d3.bisector(function(d) { return d.date; }).left;
@@ -282,64 +283,66 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
 
         //display details at current mouse location 
         function followCursor() {
+            if (!graphClicked){
+                
+                //find closest point to cursor
+                var x0 = x.invert(d3.mouse(this)[0]);
+                x0 = Date.parse(x0);
+                var i = bisect(stockData, x0, 1);
+                
+                //store the info to display
+                selectedData = stockData[i];
+                var date = new Date(selectedData.date);
+                var dateString = date.toString().substring(0,16);
 
-            //find closest point to cursor
-            var x0 = x.invert(d3.mouse(this)[0]);
-            x0 = Date.parse(x0);
-            var i = bisect(stockData, x0, 1);
-            
-            //store the info to display
-            selectedData = stockData[i];
-            var date = new Date(selectedData.date);
-            var dateString = date.toString().substring(0,16);
+                //change location of text depending on position so it does not get cut off
+                var xMod = (i > stockData.length/2) ? -200 : 10;
+                var yModDate;
+                var yModClose;
+                var fillColour = "black";
+                if (selectedData.close > avgClose){
+                    yModDate = 40;
+                    yModClose = 25;
+                }
+                else{
+                    yModDate = -20;
+                    yModClose = -35;
+                }
+                
+                //store x and y of text
+                var xCoord = x(selectedData.date) + xMod;
+                var yCoord = y(selectedData.close);
 
-            //change location of text depending on position so it does not get cut off
-            var xMod = (i > stockData.length/2) ? -200 : 10;
-            var yModDate;
-            var yModClose;
-            var fillColour = "black";
-            if (selectedData.close > avgClose){
-                yModDate = 40;
-                yModClose = 25;
+                //move the circle
+                focus.attr("cx", x(selectedData.date))
+                    .attr("cy", y(selectedData.close));
+
+                //move the line
+                focusLineX.attr("x1", width)
+                    .attr("y1", y(selectedData.close))
+                    .attr("x2", 0)
+                    .attr("y2", y(selectedData.close));
+
+                //move the line
+                focusLineY.attr("x1", x(selectedData.date))
+                    .attr("y1", 0)
+                    .attr("x2", x(selectedData.date))
+                    .attr("y2", height);
+                
+                //move the text
+                var focusHTML = `<tspan x=${xCoord} y=${yCoord + yModDate} fill = ${fillColour}>Date:${dateString}</tspan> <tspan x=${xCoord} y=${yCoord + yModClose} fill = ${fillColour}>Closing Price: ${selectedData.close} USD</tspan>`;
+
+                focusText.html(focusHTML);
+
+                //add to info table
+                selectedDate.innerHTML = "Stock Info for " + date.toString();
+                openCell.innerHTML = stockInfo[i].info['1. open'];
+                highCell.innerHTML = stockInfo[i].info['2. high'];
+                lowCell.innerHTML = stockInfo[i].info['3. low'];
+                closeCell.innerHTML = stockInfo[i].info['4. close'];
+                volumeCell.innerHTML = stockInfo[i].info['5. volume'];
+
             }
-            else{
-                yModDate = -20;
-                yModClose = -35;
-            }
-            
-            //store x and y of text
-            var xCoord = x(selectedData.date) + xMod;
-            var yCoord = y(selectedData.close);
-
-            //move the circle
-            focus.attr("cx", x(selectedData.date))
-                .attr("cy", y(selectedData.close));
-
-            //move the line
-            focusLineX.attr("x1", width)
-                .attr("y1", y(selectedData.close))
-                .attr("x2", 0)
-                .attr("y2", y(selectedData.close));
-
-            //move the line
-            focusLineY.attr("x1", x(selectedData.date))
-                .attr("y1", 0)
-                .attr("x2", x(selectedData.date))
-                .attr("y2", height);
-            
-            //move the text
-            var focusHTML = `<tspan x=${xCoord} y=${yCoord + yModDate} fill = ${fillColour}>Date:${dateString}</tspan> <tspan x=${xCoord} y=${yCoord + yModClose} fill = ${fillColour}>Closing Price: ${selectedData.close} USD</tspan>`;
-
-            focusText.html(focusHTML);
-
-            //add to info table
-            selectedDate.innerHTML = "Stock Info for " + date.toString();
-            openCell.innerHTML = stockInfo[i].info['1. open'];
-            highCell.innerHTML = stockInfo[i].info['2. high'];
-            lowCell.innerHTML = stockInfo[i].info['3. low'];
-            closeCell.innerHTML = stockInfo[i].info['4. close'];
-            volumeCell.innerHTML = stockInfo[i].info['5. volume'];
-
         }
 
         //make text and circle when mouse is over the graph
@@ -352,10 +355,21 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         
         //hide details when mouse leaves graph
         function hideDetails() {
-            focus.style("opacity", 0);
-            focusText.style("opacity", 0);
-            focusLineX.style("opacity", 0);
-            focusLineY.style("opacity", 0);
+            if (!graphClicked){
+                focus.style("opacity", 0);
+                focusText.style("opacity", 0);
+                focusLineX.style("opacity", 0);
+                focusLineY.style("opacity", 0);
+            }
+        }
+
+        function pauseCursor(){
+            if (graphClicked){
+                graphClicked = false;
+            }
+            else{
+                graphClicked = true;
+            }
         }
 
     })
@@ -384,38 +398,76 @@ var buildNewsColumn = function(apiSymbol){
     .then((resp) => resp.json())
     .then(function(data) { // success
 
-        var articles = data.articles;
+        var articles = data.articles; //get the articles
+
+        var maxArticles = 10; //maximum number of articles to display
+        var count = 0; //current article being displayed
         
-        var count = 0;
         //loop through articles (max 10)
         for (var i = 0; i < articles.length; i++){
-            if (count > 10){
+
+            //break if max articles amount has been reached
+            if (count >= maxArticles){
                 break;
             }
 
-            //create HTML for box
+            //create card for each article
             var newsCard = document.createElement('div');
+            newsCard.className = "card";
 
-            newsCard.innerHTML = `
-            <div class="card">
-                <div class="card-image">
-                    <figure class="image is-3by1">
-                        <img src="${articles[i].urlToImage}" alt="No Image">
-                    </figure>
-                </div>
-                <div class="card-content">
-                    <div class="media-content">
-                        <a class="title is-3" href="${articles[i].url}" target="_blank">${articles[i].title}</a>
-                    </div>
-                    <div class="media-content">
-                        <p class="subtitle is-5">${articles[i].author}, Source: ${articles[i].source.name}</p>
-                    </div>
-                    <div class="content">${articles[i].description}
-                        <br>
-                        <p>${articles[i].publishedAt.substring(0,10)}</p>
-                    </div>
-                </div>
-            </div>`;
+            //create card image
+            var newsCardImage = document.createElement('div');
+            newsCardImage.className = "card-image";
+            var newsFigure = document.createElement("figure");
+            newsFigure.className = "image is-3by1";
+            var newsImage = document.createElement("img");
+            newsImage.src = articles[i].urlToImage;
+            newsImage.alt = "No Image Found";
+
+            //insert card image
+            newsFigure.appendChild(newsImage);
+            newsCardImage.appendChild(newsFigure);
+            newsCard.appendChild(newsCardImage);
+
+            //create card title
+            var cardTitle = document.createElement("div");
+            cardTitle.className = "card-content";
+            var mediaContent = document.createElement("div");
+            mediaContent.className = "media-content";
+            var articleTitle = document.createElement("a");
+            articleTitle.className = "title";
+            articleTitle.href = articles[i].url;
+            articleTitle.target = "_blank";
+            articleTitle.innerHTML = articles[i].title;
+            
+            //insert card title
+            mediaContent.appendChild(articleTitle);
+            cardTitle.appendChild(mediaContent);
+            newsCard.appendChild(cardTitle);
+
+            //create card subtitle
+            var cardSubtitle = document.createElement("div");
+            cardSubtitle.className = "content";
+            var subtitleContent = document.createElement("p");
+            subtitleContent.className = "subtitle is-6";
+            subtitleContent.innerHTML = `${articles[i].author}, Source: ${articles[i].source.name}`;
+
+            //insert card subtitle
+            cardSubtitle.appendChild(subtitleContent);
+            newsCard.appendChild(cardSubtitle);
+
+            //create card content
+            var cardContent = document.createElement("div");
+            cardContent.className = "content";
+            var contentDescription = document.createElement("p");
+            contentDescription.innerHTML = articles[i].description;
+            var contentPublish = document.createElement("p");
+            contentPublish.innerHTML = `Published: ${articles[i].publishedAt.substring(0, 10)}`;
+
+            //insert card content
+            cardContent.appendChild(contentDescription);
+            cardContent.appendChild(contentPublish);
+            newsCard.appendChild(cardContent);
             
             newsColumn.appendChild(newsCard);
 
