@@ -7,9 +7,41 @@ var stock3;
 var stock1Cell;
 var stock2Cell;
 var stock3Cell;
-var userData;
 
 window.onload = function(){
+
+    /*
+    fetch('/api/getStock', {method: 'GET'})
+    .then((resp) => resp.json())
+    .then(function(data) { // success
+        userData = data;
+        stock1 = data[0].stock1;
+        stock2 = data[0].stock2;
+        stock3 = data[0].stock3;
+
+        console.log(userData);
+        buildPage();
+    })
+    .catch(function(error) { // error
+        console.log(error);
+    });*/
+
+    var fetchResult = getStoredData();
+    fetchResult.then(function(value){
+        console.log(value);
+        this.buildPage(value);
+    });
+    
+};
+
+async function getStoredData(){
+    var response = await this.fetch('/api/getStock', {method: 'GET'});
+    var data = await response.json();
+    console.log(data);
+    return data;
+}
+
+function buildPage(userData){
     //get search bar
     var searchBar = document.getElementById("searchBar");
     var searchButton = document.getElementById("searchButton");
@@ -17,48 +49,44 @@ window.onload = function(){
 
     //process search on button click
     $(searchButton).click(function() {
-        processSearch(searchBar.value);
+        processSearch(searchBar.value, userData);
     });
 
     //process search on enter press in search bar
     $(searchBar).on('keypress', function(e) {
         if (e.which == 13){
-            processSearch(searchBar.value);
+            processSearch(searchBar.value, userData);
         }
     });
-
-    $.post("/api/getStock", function(data) {
-        userData = data;
-        stock1 = data[0].stock1;
-        stock2 = data[0].stock2;
-        stock3 = data[0].stock3;
-    });
-
+    
     $(submitButton).click(function() {
-        fetch('/updateStock', {method: 'POST'})
+        console.log('submitting');
+        var stringData = JSON.stringify(userData);
+        console.log(`json string: ${stringData}`);
+
+        fetch('/updateStock', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: stringData
+        })
         .then(function(response) {
-        if(response.ok) {
-            response.send(userData);
-            console.log('click was recorded');
-            return;
-        }
-        throw new Error('Request failed.');
+            console.log('recorded');
         })
         .catch(function(error) {
-        console.log(error);
+            console.log(error);
+        });
     });
-
-    });
-
-};
+}
 
 /**
  * Fetches search results from alphavantage api and creates table
  * @param {*} searchQuery - The search query
  */
-function processSearch(searchQuery){
-    console.log(searchQuery);
-
+async function processSearch(searchQuery, userData){
+    
     var apiKey = "KA26ULAWH85VJQEN";
     var apiLink = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchQuery}&apikey=${apiKey}`
 
@@ -106,6 +134,7 @@ function processSearch(searchQuery){
     searchResults.appendChild(tableBody);
 
     //fetch search results from api
+    /*
     fetch(apiLink)
     .then((resp) => resp.json())
     .then(function(data) { // success
@@ -119,9 +148,21 @@ function processSearch(searchQuery){
     })
     .catch(function(error) { // error
         console.log(error);
-    });    
+    });*/
 
+    var data = await getApiData(apiLink);
+    data.bestMatches.forEach(result => {
+        buildResult(result);
+    });
+
+    setButtonFunction(userData);
 };
+
+async function getApiData(apiLink){
+    var response = await this.fetch(apiLink);
+    var data = await response.json();
+    return data;
+}
 
 /**
  * Adds a row for a search result
@@ -166,8 +207,7 @@ function buildResult(searchResult){
 /**
  * Applies a on click function to all stock selection buttons
  */
-function setButtonFunction(){
-    console.log(stock1Buttons);
+function setButtonFunction(userData){
     //apply click function to stock1 column
     
     stock1Buttons.forEach(button => {
@@ -175,9 +215,11 @@ function setButtonFunction(){
             unhighlightButtons(stock1Buttons);
             stock1 = button[1];
             button[0].className = "button is-info";
-            console.log(`${stock1}, ${stock2}, ${stock3}`);
+            //console.log(`${stock1}, ${stock2}, ${stock3}`);
             stock1Cell.innerHTML = stock1
-            userData[0].stock1 = stock1;;
+            userData['0'].stock1 = stock1;
+
+            console.log(userData);
         });
     });
 
@@ -187,9 +229,9 @@ function setButtonFunction(){
             unhighlightButtons(stock2Buttons);
             stock2 = button[1];
             button[0].className = "button is-info";
-            console.log(`${stock1}, ${stock2}, ${stock3}`);
+            //console.log(`${stock1}, ${stock2}, ${stock3}`);
             stock2Cell.innerHTML = stock2;
-            userData[0].stock2 = stock2;
+            userData['0'].stock2 = stock2;
         });
     });
 
@@ -199,9 +241,9 @@ function setButtonFunction(){
             unhighlightButtons(stock3Buttons);
             stock3 = button[1];
             button[0].className = "button is-info";
-            console.log(`${stock1}, ${stock2}, ${stock3}`);
+            //console.log(`${stock1}, ${stock2}, ${stock3}`);
             stock3Cell.innerHTML = stock3;
-            userData[0].stock3 = stock3;
+            userData['0'].stock3 = stock3;
         });
     });
 };

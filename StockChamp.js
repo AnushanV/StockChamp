@@ -149,7 +149,7 @@ app.post('/loginProcess', (request, response)=>{
 });
 
 //Get user stock list
-app.post("/api/getStock", (request, response) =>{
+app.get("/api/getStock", (request, response) =>{
     var session = request.session;
     User.find({
       username: session.username
@@ -167,8 +167,18 @@ app.post("/api/getStock", (request, response) =>{
     });
 });
 
-app.post('/updateStock', function(data) {
-	console.log(data);
+app.post('/updateStock', (request, response) =>{
+	var session = request.session;
+	console.log(request.body);
+
+	//update user here
+	/*
+	User.find({
+		username: session.username
+	}).then(function(result){
+		
+	});*/
+
 });
 
 app.set('port', 3000);
