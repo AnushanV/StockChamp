@@ -3,7 +3,7 @@
 window.onload = function(){
    
     //get values needed for api link
-    var apiSymbol = "TD";
+    var apiSymbol = document.title;
     var apiInterval = "1min";
     var apiOutputSize = "compact";
     var apiKey = "KA26ULAWH85VJQEN";

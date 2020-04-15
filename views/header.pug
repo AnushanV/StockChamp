@@ -3,20 +3,23 @@ html
 	head
 		title= title
 		link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css")
-		link(ref="stylesheet", href="public/style/header.css")
-		script(src='/../scripts/header.js' type='text/javascript')
+		link(rel="stylesheet", href="public/style/header.css")
+		script(src='http://code.jquery.com/jquery-latest.min.js' type='text/javascript')
 		block scripts
 	body
 		nav(class="navbar" role="navigation" aria-label="main navigation")
 			div(class="navbar-brand")
-				a(class="navbar-item" id="logo" href="/")
+				a(class="navbar-item" id="logo" href="/searchPage")
 					img(src="images/logo.png")
-				p(class="navbar-item" href="/")
-					a= stock1
-				p(class="navbar-item" href="/")
-					a= stock2
-				p(class="navbar-item" href="/") 
-					a= stock3
+					
+				p(class="navbar-item")
+					a(href="/stockPage/" + stock1)= stock1
+					
+				p(class="navbar-item")
+					a(href="/stockPage/" + stock2)= stock2
+					
+				p(class="navbar-item") 
+					a(href="/stockPage/" + stock3)= stock3
 			div(class="navbar-end")
 				a(class="control has-icon navbar-item" href="/")
 					i(class="fa fa-sign-out-alt fa-2x")

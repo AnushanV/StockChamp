@@ -110,9 +110,10 @@ app.post('/signupProcess', (request, response) =>{
 
 });
 
+/*
 // change to stock page
 app.get('/stockPage', (request, response)=>{
-/* 	User.find({
+ 	User.find({
 		username: session.username
 	  }).then(function(result) {
 		User.find({
@@ -125,20 +126,29 @@ app.get('/stockPage', (request, response)=>{
 										stock3: 'test3'});
 		}).catch(function(error) {
 		  response.send(error);
-		}); */
+		}); 
 	//  }).catch(function(error) {
 	//	response.send(error);
 	//  });
-	response.render('stockPage', {stock1: 'test',
-										stock2: 'test2',
-										stock3: 'test3'});
-});
+	response.render('stockPage', {stock1: request.session.stock1,
+									stock2: request.session.stock2,
+									stock3: request.session.stock3});
+});*/
 
 // change to search page
 app.get('/searchPage', (request, response)=>{
-	response.render('searchPage', {});
+	response.render('searchPage', {stock1: request.session.stock1,
+									stock2: request.session.stock2,
+									stock3: request.session.stock3});
 });
 
+// get to the appropriate stockPage
+app.get('/stockPage/:name', (request, response)=>{
+	response.render("stockPage", {stock1: request.session.stock1,
+								stock2: request.session.stock2,
+								stock3: request.session.stock3,
+								title: request.params.name});
+});
 
 // resolve log in
 app.post('/loginProcess', (request, response)=>{
@@ -150,6 +160,7 @@ app.post('/loginProcess', (request, response)=>{
 		  	response.render('login', {systemMessage: 'Incorrect Username!'});
 		} else {
 		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
+			currentUser = results;
 			request.session.username = username;
 			request.session.stock1 = results[0].stock1;
 			request.session.stock2 = results[0].stock2;
