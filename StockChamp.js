@@ -112,7 +112,26 @@ app.post('/signupProcess', (request, response) =>{
 
 // change to stock page
 app.get('/stockPage', (request, response)=>{
-	response.render('stockPage', {});
+/* 	User.find({
+		username: session.username
+	  }).then(function(result) {
+		User.find({
+		  username: result[0].username
+		}).then(function(result) {
+		  //console.log(result);
+		  //response.send(result);
+		  response.render('header', {stock1: 'test',
+										stock2: 'test2',
+										stock3: 'test3'});
+		}).catch(function(error) {
+		  response.send(error);
+		}); */
+	//  }).catch(function(error) {
+	//	response.send(error);
+	//  });
+	response.render('stockPage', {stock1: 'test',
+										stock2: 'test2',
+										stock3: 'test3'});
 });
 
 // change to search page
@@ -135,7 +154,9 @@ app.post('/loginProcess', (request, response)=>{
 			request.session.stock1 = results[0].stock1;
 			request.session.stock2 = results[0].stock2;
 			request.session.stock3 = results[0].stock3;
-			response.render('searchPage', {});
+			response.render('searchPage', {stock1: results[0].stock1,
+											stock2: results[0].stock2,
+											stock3: results[0].stock3});
 		  } else {
 			response.render('login', {systemMessage: 'Incorrect Password!'});
 		  }
