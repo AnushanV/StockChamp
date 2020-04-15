@@ -51,6 +51,7 @@ var userSchema = new Schema({
   stock2: {type: String, default: ''},
   stock3: {type: String, default: ''}
 }, {collection: 'users'});
+
 var User = mongoose.model('users', userSchema);
 
 // change to login page
@@ -127,11 +128,15 @@ app.post('/loginProcess', (request, response)=>{
 
 	User.find({username: username}).then(function(results) {
 		if (results.length == 0) {
-		  response.render('login', {systemMessage: 'Incorrect Username!'});
+		  	response.render('login', {systemMessage: 'Incorrect Username!'});
 		} else {
 		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-			response.render('login', {systemMessage: username});
-		  }else {
+			request.session.username = username;
+			request.session.stock1 = results[0].stock1;
+			request.session.stock2 = results[0].stock2;
+			request.session.stock3 = results[0].stock3;
+			response.render('searchPage', {});
+		  } else {
 			response.render('login', {systemMessage: 'Incorrect Password!'});
 		  }
 		}
@@ -141,6 +146,29 @@ app.post('/loginProcess', (request, response)=>{
 //	response.render('login', {
 //		verification: false
 //	})
+});
+
+//Get user stock list
+app.post("/api/getStock", (request, response) =>{
+    var session = request.session;
+    User.find({
+      username: session.username
+    }).then(function(result) {
+      User.find({
+        username: result[0].username
+      }).then(function(result) {
+		//console.log(result);
+        response.send(result);
+      }).catch(function(error) {
+        response.send(error);
+      });
+    }).catch(function(error) {
+      response.send(error);
+    });
+});
+
+app.post('/updateStock', function(data) {
+	console.log(data);
 });
 
 app.set('port', 3000);

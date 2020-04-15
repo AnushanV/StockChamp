@@ -7,11 +7,13 @@ var stock3;
 var stock1Cell;
 var stock2Cell;
 var stock3Cell;
+var userData;
 
 window.onload = function(){
     //get search bar
     var searchBar = document.getElementById("searchBar");
     var searchButton = document.getElementById("searchButton");
+    var submitButton = document.getElementById("updateStock");
 
     //process search on button click
     $(searchButton).click(function() {
@@ -23,6 +25,29 @@ window.onload = function(){
         if (e.which == 13){
             processSearch(searchBar.value);
         }
+    });
+
+    $.post("/api/getStock", function(data) {
+        userData = data;
+        stock1 = data[0].stock1;
+        stock2 = data[0].stock2;
+        stock3 = data[0].stock3;
+    });
+
+    $(submitButton).click(function() {
+        fetch('/updateStock', {method: 'POST'})
+        .then(function(response) {
+        if(response.ok) {
+            response.send(userData);
+            console.log('click was recorded');
+            return;
+        }
+        throw new Error('Request failed.');
+        })
+        .catch(function(error) {
+        console.log(error);
+    });
+
     });
 
 };
@@ -45,11 +70,11 @@ function processSearch(searchQuery){
     titleCell = document.createElement('th');
     titleCell.innerHTML = `Currently Selected`;
     stock1Cell = document.createElement('th');
-    stock1Cell.innerHTML = (stock1 == undefined) ? 'None' : stock1;
+    stock1Cell.innerHTML = (stock1 == '') ? 'None' : stock1;
     stock2Cell = document.createElement('th');
-    stock2Cell.innerHTML = (stock2 == undefined) ? 'None' : stock2;
+    stock2Cell.innerHTML = (stock2 == '') ? 'None' : stock2;
     stock3Cell = document.createElement('th');
-    stock3Cell.innerHTML = (stock3 == undefined) ? 'None' : stock3;
+    stock3Cell.innerHTML = (stock3 == '') ? 'None' : stock3;
 
     tableHeader.appendChild(titleCell);
     tableHeader.appendChild(stock1Cell);
@@ -151,7 +176,8 @@ function setButtonFunction(){
             stock1 = button[1];
             button[0].className = "button is-info";
             console.log(`${stock1}, ${stock2}, ${stock3}`);
-            stock1Cell.innerHTML = stock1;
+            stock1Cell.innerHTML = stock1
+            userData[0].stock1 = stock1;;
         });
     });
 
@@ -163,6 +189,7 @@ function setButtonFunction(){
             button[0].className = "button is-info";
             console.log(`${stock1}, ${stock2}, ${stock3}`);
             stock2Cell.innerHTML = stock2;
+            userData[0].stock2 = stock2;
         });
     });
 
@@ -174,6 +201,7 @@ function setButtonFunction(){
             button[0].className = "button is-info";
             console.log(`${stock1}, ${stock2}, ${stock3}`);
             stock3Cell.innerHTML = stock3;
+            userData[0].stock3 = stock3;
         });
     });
 };
