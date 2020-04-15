@@ -191,15 +191,15 @@ app.get("/api/getStock", (request, response) =>{
 app.post('/updateStock', (request, response) =>{
 	var session = request.session;
 	console.log(request.body);
-
-	//update user here
-	/*
-	User.find({
-		username: session.username
-	}).then(function(result){
+	User.collection.updateOne(
+		{"username": request.body[0].username},
+		{$set: {
+			"stock1": request.body[0].stock1,
+			"stock2": request.body[0].stock2,
+			"stock3": request.body[0].stock3
+		}}
 		
-	});*/
-
+	);
 });
 
 app.set('port', 3000);

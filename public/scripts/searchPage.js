@@ -29,6 +29,9 @@ window.onload = function(){
     var fetchResult = getStoredData();
     fetchResult.then(function(value){
         console.log(value);
+        stock1 = value[0].stock1;
+        stock2 = value[0].stock2;
+        stock3 = value[0].stock3;
         this.buildPage(value);
     });
     
