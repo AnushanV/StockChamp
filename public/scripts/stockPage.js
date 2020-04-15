@@ -405,7 +405,7 @@ var buildNewsColumn = function(apiSymbol){
                 </div>
                 <div class="card-content">
                     <div class="media-content">
-                        <a class="title is-3" href="${articles[i].url}">${articles[i].title}</a>
+                        <a class="title is-3" href="${articles[i].url}" target="_blank">${articles[i].title}</a>
                     </div>
                     <div class="media-content">
                         <p class="subtitle is-5">${articles[i].author}, Source: ${articles[i].source.name}</p>
