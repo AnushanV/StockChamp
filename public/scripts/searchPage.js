@@ -113,11 +113,12 @@ function buildPage(userData){
 /**
  * Fetches search results from alphavantage api and creates table
  * @param {*} searchQuery - The search query
+ * @param {*} userData - The database entry for the user
  */
 async function processSearch(searchQuery, userData){
     
     //get link to alphavantage api
-    var apiKey = "BAHJPY9DH9YKDHZZ";
+    var apiKey = "KA26ULAWH85VJQEN";
     var apiLink = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchQuery}&apikey=${apiKey}`
 
     var searchResults = document.getElementById("searchResults");
