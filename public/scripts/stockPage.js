@@ -97,6 +97,7 @@ var getApiLink = function(apiSymbol, apiInterval, apiOutputSize, apiKey){
  * Builds the stock graph and the info table
  * @param {*} apiLink - link to the api
  * @param {*} apiInterval - time between prices
+ * @param {*} apiSymbol - the current stock symbol
  */
 var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
     
@@ -167,7 +168,8 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
 
         var count = 0; //used to end loop if it goes over 100
         var avgClose = 0; //average close value
-        //loop through all states
+
+        //loop through all entries of stock info
         for (let [key, value] of Object.entries(dataPoints)){
             
             if (count > 100){
@@ -191,7 +193,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         avgClose /= stockData.length;
         console.log(avgClose);
         
-        // Scale the range of the data
+        //set domain of graph
         x.domain(d3.extent(stockData, function(d) { return d.date; }));
         y.domain(d3.extent(stockData, function(d) { return d.close; }));
         
@@ -231,7 +233,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             .attr("offset", "100%")
             .attr("stop-color", "red");
 
-        //add the path.
+        //add the lines using stock data
         svg.append("path")
             .data([stockData])
             .attr("opacity", 0.3)
@@ -240,7 +242,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             .attr("stroke-width", 1.5)
             .attr("d", line)
         
-        //create circle to show details
+        //create circle to show current hovered position and details
         var focus = svg.append('g')
             .append('circle')
             .style("fill", "blue")
@@ -248,7 +250,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             .attr('r', 3.5)
             .style("opacity", 0)
 
-        //create line to show details
+        //create perpendicular lines intersecting at the circle
         var focusLineX = svg.append('line')
             .style("stroke", "blue")
             .style("stroke-dasharray", 5);
@@ -256,15 +258,14 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             .style("stroke", "blue")
             .style("stroke-dasharray", 5);
 
-        //show text details
-        var focusText = svg
-            .append('g')
+        //create text details which are initially hidden
+        var focusText = svg.append('g')
             .append('text')
             .style("opacity", 0)
             .attr("text-anchor", "left")
             .attr("alignment-baseline", "middle");
 
-        //create rectangle over graph for mouse events
+        //create invisible rectangle covering whole graph to receive mouse events
         svg.append('rect')
             .style("fill", "none")
             .style("pointer-events", "all")
@@ -277,7 +278,8 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         
         //used to find circle placement
         var bisect = d3.bisector(function(d) { return d.date; }).left;
-        //sort by date for bisecting
+
+        //sort stock info by date for bisecting
         stockData.sort(function(a, b) { return a.date - b.date; });
         stockInfo.sort(function(a, b) { return a.date - b.date; });
 
@@ -285,7 +287,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
         function followCursor() {
             if (!graphClicked){
                 
-                //find closest point to cursor
+                //find closest point to cursor using bisect
                 var x0 = x.invert(d3.mouse(this)[0]);
                 x0 = Date.parse(x0);
                 var i = bisect(stockData, x0, 1);
@@ -313,28 +315,27 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
                 var xCoord = x(selectedData.date) + xMod;
                 var yCoord = y(selectedData.close);
 
-                //move the circle
+                //move focus circle
                 focus.attr("cx", x(selectedData.date))
                     .attr("cy", y(selectedData.close));
 
-                //move the line
+                //move focus line
                 focusLineX.attr("x1", width)
                     .attr("y1", y(selectedData.close))
                     .attr("x2", 0)
                     .attr("y2", y(selectedData.close));
 
-                //move the line
+                //move focus line
                 focusLineY.attr("x1", x(selectedData.date))
                     .attr("y1", 0)
                     .attr("x2", x(selectedData.date))
                     .attr("y2", height);
                 
-                //move the text
+                //move the text and set text data
                 var focusHTML = `<tspan x=${xCoord} y=${yCoord + yModDate} fill = ${fillColour}>Date:${dateString}</tspan> <tspan x=${xCoord} y=${yCoord + yModClose} fill = ${fillColour}>Closing Price: ${selectedData.close} USD</tspan>`;
-
                 focusText.html(focusHTML);
 
-                //add to info table
+                //update info table for more details on current stock
                 selectedDate.innerHTML = "Stock Info for " + date.toString();
                 openCell.innerHTML = stockInfo[i].info['1. open'];
                 highCell.innerHTML = stockInfo[i].info['2. high'];
@@ -345,7 +346,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             }
         }
 
-        //make text and circle when mouse is over the graph
+        //show details when hovering over graph
         function showDetails() {
             focus.style("opacity", 1);
             focusText.style("opacity",1);
@@ -353,9 +354,9 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             focusLineY.style("opacity", 1);
         }
         
-        //hide details when mouse leaves graph
+        //hide details when not hovering over
         function hideDetails() {
-            if (!graphClicked){
+            if (!graphClicked){ //keep details shown if user clicks
                 focus.style("opacity", 0);
                 focusText.style("opacity", 0);
                 focusLineX.style("opacity", 0);
@@ -363,6 +364,7 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
             }
         }
 
+        //toggle fixed positon of focus circle when clicking on graph
         function pauseCursor(){
             if (graphClicked){
                 graphClicked = false;
@@ -375,13 +377,18 @@ var buildGraphColumn = function(apiLink, apiInterval, apiSymbol){
     })
     .catch(function(error) { //error reading api
         console.log(error);
-    });   
+    });
 }
 
-var buildNewsColumn = function(apiSymbol){
+/**
+ * Builds the news column for the given api symbol
+ * @param {*} apiSymbol - current stock symbol
+ */
+var buildNewsColumn = function (apiSymbol){
     var newsColumn = document.getElementById("newsColumn");
     newsColumn.innerHTML = ""; //reset news column
 
+    //create the header for the column
     var newsHeader = document.createElement('h1');
     newsHeader.id = 'newsHeader';
     newsHeader.className = 'title is-2';
@@ -389,8 +396,8 @@ var buildNewsColumn = function(apiSymbol){
 
     newsColumn.appendChild(newsHeader);
 
+    //create api link
     var newsApiKey = "9bb0a6bee065460a81bd1cfd3940951e";
-    //search stock symbol at business category
     var newsApiLink = `http://newsapi.org/v2/everything?q=${apiSymbol}&sortBy=popularity&apiKey=${newsApiKey}`;
 
     //fetch news data from api
