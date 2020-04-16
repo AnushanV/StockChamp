@@ -1,6 +1,6 @@
 ![alt text](https://github.com/QuangMinhHuynh/StockChamp/blob/master/public/images/logo.png)
 ===========
-Final Project for CSCI 3230U
+Final Project for CSCI 3230U Winter 2020
 
 ## Team Members
 * Minh Huynh
@@ -8,7 +8,7 @@ Final Project for CSCI 3230U
 * Anushan Vimalathasan
 
 ## Project Description
-(Work In Progress)
+  (Work In Progress)
 
 ## Requirements
 * Node.js (npm included)
@@ -27,6 +27,8 @@ Final Project for CSCI 3230U
 3. To run the project, enter `nodemon` in Powershell
 4. Open any web browser and enter `localhost:3000` which will lead you to the Login page
 5. For first time user, you can Sign Up for an account!
+6. To view detailed info about user data, open MongoCompass
 
 ## Notes
-To view detailed info about user data, open MongoCompass
+Since we do not have the paid version of the stocks API we're using, we can only request from the free API **5 times per minute**. 
+If you try to request more than that from the API on our stock page by **changing the time interval or generating a new stock page too many times within a minute, it will fail to load the graph.**
