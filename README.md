@@ -8,7 +8,9 @@ Final Project for CSCI 3230U Winter 2020
 * Anushan Vimalathasan
 
 ## Project Description
-  (Work In Progress)
+StockChamp is a web application software that allows users to search and view information about stocks (market prices and trends, related news, etc.). Users can subscribe to a maximum of three different stocks at the same time and save them as shortcuts for ease of access.
+
+In the future, users can edit their subscriptions at any time.
 
 ## Requirements
 * Node.js (npm included)
@@ -24,4 +26,5 @@ Final Project for CSCI 3230U Winter 2020
 
 ## Notes
 Since we do not have the paid version of the stocks API we're using, we can only request from the free API **5 times per minute**. 
+
 If you try to request more than that from the API on our stock page by **changing the time interval or generating a new stock page too many times within a minute, it will fail to load the graph.**
