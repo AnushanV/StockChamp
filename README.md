@@ -34,6 +34,8 @@ If you try to request more than that from the API on our stock page by **changin
 
 2. The news column searches news using the stock symbol, so the **results may not match the company if the company not well known.**
 
+3. This project is **optimized for full-screen display.**
+
 ## References
 Some references were used to learn how to do things, and we tried to expand on the code that we referenced.
 
@@ -42,4 +44,3 @@ Some references were used to learn how to do things, and we tried to expand on t
  2. Making line graph:
    * https://www.d3-graph-gallery.com/graph/line_cursor.html
    * https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0
-   
