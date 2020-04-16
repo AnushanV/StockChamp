@@ -179,11 +179,7 @@ function buildResult(searchResult){
 
     //create cell with result
     var resultCell = document.createElement("td");
-	// creating clickable text
-	var clickableText = document.createElement("a");
-	clickableText.innerHTML = `${searchResult["2. name"]} (${searchResult["1. symbol"]})`;
-	clickableText.setAttribute("href", `/stockPage/${searchResult["1. symbol"]}`);
-	resultCell.appendChild(clickableText);
+    resultCell.innerHTML = `${searchResult["2. name"]} (${searchResult["1. symbol"]})`;
     resultRow.appendChild(resultCell);
 
     //create buttons
