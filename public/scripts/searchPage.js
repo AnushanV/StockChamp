@@ -1,31 +1,21 @@
-var stock1Buttons = [];
+//list of buttons in each stock column
+var stock1Buttons = []; 
 var stock2Buttons = [];
 var stock3Buttons = [];
+
+//current selected stock for each column
 var stock1;
 var stock2;
 var stock3;
+
+//header stock cells
 var stock1Cell;
 var stock2Cell;
 var stock3Cell;
 
 window.onload = function(){
 
-    /*
-    fetch('/api/getStock', {method: 'GET'})
-    .then((resp) => resp.json())
-    .then(function(data) { // success
-        userData = data;
-        stock1 = data[0].stock1;
-        stock2 = data[0].stock2;
-        stock3 = data[0].stock3;
-
-        console.log(userData);
-        buildPage();
-    })
-    .catch(function(error) { // error
-        console.log(error);
-    });*/
-
+    //build page based on current user data
     var fetchResult = getStoredData();
     fetchResult.then(function(value){
         console.log(value);
@@ -37,13 +27,21 @@ window.onload = function(){
     
 };
 
+/**
+ * Returns the database data for the current user
+ */
 async function getStoredData(){
+    //fetch and return data
     var response = await this.fetch('/api/getStock', {method: 'GET'});
     var data = await response.json();
     console.log(data);
     return data;
 }
 
+/**
+ * Builds the whole search page
+ * @param {*} userData - The database entry for the user
+ */
 function buildPage(userData){
     //get search bar
     var searchBar = document.getElementById("searchBar");
@@ -62,11 +60,15 @@ function buildPage(userData){
         }
     });
     
+    //submit new stocks when submit button is clicked
     $(submitButton).click(function() {
+
+        //stringify the new stock data
         console.log('submitting');
         var stringData = JSON.stringify(userData);
         console.log(`json string: ${stringData}`);
 
+        //send new stock data to the database
         fetch('/updateStock', {
             method: 'POST',
             headers: {
@@ -82,7 +84,7 @@ function buildPage(userData){
             console.log(error);
         });
 
-        location.reload(true);
+        location.reload(true); //reload the page to update stocks
     });
 }
 
@@ -92,13 +94,14 @@ function buildPage(userData){
  */
 async function processSearch(searchQuery, userData){
     
+    //get link to alphavantage api
     var apiKey = "KA26ULAWH85VJQEN";
     var apiLink = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchQuery}&apikey=${apiKey}`
 
     var searchResults = document.getElementById("searchResults");
     searchResults.innerHTML = ""; //clear table for new search
     
-    //append current stock results to header
+    //append current stocks to header
     tableHeader = document.createElement('thead');
     titleCell = document.createElement('th');
     titleCell.innerHTML = `Currently Selected`;
@@ -138,31 +141,20 @@ async function processSearch(searchQuery, userData){
     tableBody.id = "searchBody";
     searchResults.appendChild(tableBody);
 
-    //fetch search results from api
-    /*
-    fetch(apiLink)
-    .then((resp) => resp.json())
-    .then(function(data) { // success
-        data.bestMatches.forEach(result => {
-            buildResult(result);
-        });
-
-        //set button click functions after results are complete
-        setButtonFunction();
-        
-    })
-    .catch(function(error) { // error
-        console.log(error);
-    });*/
-
+    //build search results based on data from api
     var data = await getApiData(apiLink);
     data.bestMatches.forEach(result => {
         buildResult(result);
     });
 
+    //apply button functions
     setButtonFunction(userData);
 };
 
+/**
+ * Returns the search data from alphavantage api
+ * @param {*} apiLink - The link to alphavantage search
+ */
 async function getApiData(apiLink){
     var response = await this.fetch(apiLink);
     var data = await response.json();
@@ -188,10 +180,13 @@ function buildResult(searchResult){
 
     //create buttons
     for (var i = 1; i < 4; i++){
+
+        //create the button
         var stockButton = document.createElement('button');
         stockButton.className = "button is-info is-light";
         stockButton.innerHTML = `Set Stock ${i}`;
 
+        //create one button for each stock slot
         if (i == 1){
             stock1Buttons.push([stockButton, searchResult["1. symbol"]]);
         }
@@ -202,11 +197,10 @@ function buildResult(searchResult){
             stock3Buttons.push([stockButton, searchResult["1. symbol"]]);
         }
 
+        //add the button to the table
         var newCell = document.createElement("td");
         newCell.appendChild(stockButton);
-
         resultRow.appendChild(newCell);
-
         
     }
 
@@ -214,11 +208,12 @@ function buildResult(searchResult){
 };
 
 /**
- * Applies a on click function to all stock selection buttons
+ * Applies on click action to each stock button
+ * @param {*} userData - The current database entry for the user
  */
 function setButtonFunction(userData){
+
     //apply click function to stock1 column
-    
     stock1Buttons.forEach(button => {
         $(button[0]).click(function(){
             unhighlightButtons(stock1Buttons);
