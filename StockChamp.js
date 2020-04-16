@@ -103,46 +103,17 @@ app.post('/signupProcess', (request, response) =>{
 
 		
 		});
-	//TODO: check if username are taken and add to database if it hasn't
-	//	response.render('signup', {
-//		verification: false
-//	})
 
 });
 
-/*
-// change to stock page
-app.get('/stockPage', (request, response)=>{
- 	User.find({
-		username: session.username
-	  }).then(function(result) {
-		User.find({
-		  username: result[0].username
-		}).then(function(result) {
-		  //console.log(result);
-		  //response.send(result);
-		  response.render('header', {stock1: 'test',
-										stock2: 'test2',
-										stock3: 'test3'});
-		}).catch(function(error) {
-		  response.send(error);
-		}); 
-	//  }).catch(function(error) {
-	//	response.send(error);
-	//  });
-	response.render('stockPage', {stock1: request.session.stock1,
-									stock2: request.session.stock2,
-									stock3: request.session.stock3});
-});*/
-
-// change to search page
+// render search page
 app.get('/searchPage', (request, response)=>{
 	response.render('searchPage', {stock1: stocks[0],
 									stock2: stocks[1],
 									stock3: stocks[2]});
 });
 
-// get to the appropriate stockPage
+// render appropriate stock page
 app.get('/stockPage/:name', (request, response)=>{
 	response.render("stockPage", {stock1: stocks[0],
 								stock2: stocks[1],
@@ -154,18 +125,17 @@ app.get('/stockPage/:name', (request, response)=>{
 app.post('/loginProcess', (request, response)=>{
 	let username = request.body.username;
 	let password = request.body.password;
-
+	
+	// looks for username
 	User.find({username: username}).then(function(results) {
 		if (results.length == 0) {
-		  	response.render('login', {systemMessage: 'Incorrect Username!'});
+			// if username not found
+		  	response.render('login', {systemMessage: 'Incorrect Username or Password!'});
 		} else {
+			// compares passwords
 		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-
-			//console.log(results[0].stock3);
+			// if password is the same
 			request.session.username = username;
-/*			request.session.stock1 = results[0].stock1;
-			request.session.stock2 = results[0].stock2;
-			request.session.stock3 = results[0].stock3;*/
 			
 			stocks[0] = results[0].stock1;
 			stocks[1] = results[0].stock2;
@@ -174,15 +144,12 @@ app.post('/loginProcess', (request, response)=>{
 											stock2: stocks[1],
 											stock3: stocks[2]});
 		  } else {
-			response.render('login', {systemMessage: 'Incorrect Password!'});
+			  // if password is incorrect
+			response.render('login', {systemMessage: 'Incorrect Username or Password!'});
 		  }
 		}
 	  });
 	
-	// TODO: check credentials and move to main page if valid
-//	response.render('login', {
-//		verification: false
-//	})
 });
 
 //Get user stock list
@@ -204,6 +171,7 @@ app.get("/api/getStock", (request, response) =>{
     });
 });
 
+// updates the stock shortcuts
 app.post('/updateStock', (request, response) =>{
 	var session = request.session;
 	console.log(request.body);
@@ -221,6 +189,7 @@ app.post('/updateStock', (request, response) =>{
 	stocks[2] = request.body[0].stock3;
 });
 
+// Logout of account
 app.get('/logout', (request, response)=>{
 	stocks[0] = "";
 	stocks[1] = "";
@@ -229,6 +198,7 @@ app.get('/logout', (request, response)=>{
 	response.redirect("/");
 });
 
+// setting port
 app.set('port', 3000);
 
 app.listen(app.get('port'), ()=>{

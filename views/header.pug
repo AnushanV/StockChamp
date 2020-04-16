@@ -10,9 +10,12 @@ html
 	body
 		nav(class="navbar" role="navigation" aria-label="main navigation")
 			div(class="navbar-brand")
+			
+				// Logo
 				a(class="navbar-item" id="logo" href="/searchPage")
 					img(src="../images/logo.png")
-					
+				
+				// Stock Shortcut Buttons
 				p(class="navbar-item")
 					a(href="/stockPage/" + stock1)= stock1
 					
@@ -21,7 +24,8 @@ html
 					
 				p(class="navbar-item") 
 					a(href="/stockPage/" + stock3)= stock3
-
+			
+			// Logout
 			div(class="navbar-end")
 				a(class="control has-icon navbar-item" href="/")
 					i(class="fa fa-sign-out-alt fa-2x")

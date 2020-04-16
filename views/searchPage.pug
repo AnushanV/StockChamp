@@ -14,11 +14,17 @@ block scripts
 block content
     div(id="searchContent")
         label(class="label") Search For Stocks
-        div(class="field has-addons")    
+		
+        // Search bar
+        div(class="field has-addons")
             div(class="control is-expanded")
                 input(id="searchBar" class="input" type="text" placeholder="ABC")
             div(class="control")
                 a(class="button is-info" id="searchButton") Search
+				
+        // Submit button
         button(id="updateStock" action="/updateStock" class= "button is-info is-light") Submit
+		
+    // Search Results	
     div(id="resultContent")
         table(class="table is-fullwidth is-hoverable is-scrollable" id="searchResults")

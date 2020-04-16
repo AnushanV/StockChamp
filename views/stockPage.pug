@@ -14,8 +14,14 @@ block scripts
 	
 block content
 	div(class='columns')
+	
+		// News column
 		div(id="newsColumn" class="column is-one-third")
+		
+		// Chart and Table column
 		div(id="chartColumn" class="column is-two-third")
+		
+			// Time interval buttons
 			div(id="buttonTitle") Select Time Intervals for Graph
 			div(class= "buttons")
 				button(id="minButton" class= "button is-info is-light") 1 Minute
@@ -23,7 +29,11 @@ block content
 				button(id="dayButton" class= "button is-info is-light") 1 Day
 				button(id="weekButton" class= "button is-info") 1 Week
 				button(id="monthButton" class= "button is-info 1") Month
+				
+			// Stock chart div
 			div(id="stockChart")
+			
+			// Price table
 			div
 			table(class="table is-fullwidth is-bordered is-striped")
 				thead
