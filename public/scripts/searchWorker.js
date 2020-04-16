@@ -5,7 +5,7 @@ onmessage = function(event) {
     this.setTimeout(function() {
         if (searchQuery.length > 0){
             //get link to alphavantage api
-            var apiKey = "KA26ULAWH85VJQEN";
+            var apiKey = "BAHJPY9DH9YKDHZZ";
             var apiLink = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchQuery}&apikey=${apiKey}`;
             console.log(apiLink);
 
