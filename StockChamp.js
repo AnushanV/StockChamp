@@ -1,3 +1,4 @@
+// Setting up dependencies
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
@@ -5,43 +6,39 @@ let session = require('express-session');
 let uuid = require('uuid/v1');
 let mongoose = require('mongoose');
 let bcrypt = require('bcrypt-nodejs');
-let assert = require('assert');
-let d3   = require('d3');
 
-//Setting up database
+// Setting up database
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/StockChamp', {
 					useUnifiedTopology: true,
 					useNewUrlParser: true,
 					useCreateIndex: true});
-                 //,{useMongoClient: true});
 
-//Middleware				 
+// Middleware				 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 var stocks = ["", "", ""];
 
-//Set view engines
+// Set view engines
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
-//Configure Sessions
+// Configure Sessions
 app.use(session({
 	genid: function(request) {
 	  return uuid();
 	},
 	resave: false,
 	saveUninitialized: false,
-	//cookie: {secure: true},
 	secret: "StockChamp"
 }));
 
 // Making database schema
 var Schema = mongoose.Schema;
 
-// Making user table
+// Making user collection
 var userSchema = new Schema({
   username:{type: String,
             unique: true,
@@ -52,27 +49,28 @@ var userSchema = new Schema({
   stock3: {type: String, default: ''}
 }, {collection: 'users'});
 
+// Get the users collection in the database
 var User = mongoose.model('users', userSchema);
 
-// change to login page
+// Change to login page (landing page)
 app.get('/', (request, response)=>{
 	response.render('login', {});
 });
 
-// sign up page
+// Sign up page
 app.get('/signup', (request, response)=>{
 	let username = request.body.username;
 	console.log(username);
 	response.render('signup', {systemMessage: ''});
 });
 
-// resolve sign up process
+// Resolve sign up process
 app.post('/signupProcess', (request, response) =>{
 	let username = request.body.username;
 	let password = request.body.password;
 	let hashedPassword = bcrypt.hashSync(password);
 
-	
+	// If user did not enter both of the field when sign up
 	if (username == null || password == null
 		|| username == "" || password == "") {
 		response.render('signup', {systemMessage: 'Please enter both Username and Password'});
@@ -85,12 +83,12 @@ app.post('/signupProcess', (request, response) =>{
 		stock2: '',
 		stock3: ''});
 
-		//Check if user already exist
+		// Check if username already exist
 		User.find({username: username}).then(function(results){
 			if (results.length > 0) {
 			  response.render('signup', {systemMessage: 'This username already exists'});
 			} else {
-			  //username unavailable
+			  //Catch any error while signing up
 			  newUser.save(function(error) {
 				if (error) {
 				console.log('Unable to Sign Up: ' + error);
@@ -106,14 +104,14 @@ app.post('/signupProcess', (request, response) =>{
 
 });
 
-// render search page
+// Render the Search Page
 app.get('/searchPage', (request, response)=>{
 	response.render('searchPage', {stock1: stocks[0],
 									stock2: stocks[1],
 									stock3: stocks[2]});
 });
 
-// render appropriate stock page
+// Render the appriate Stock Page
 app.get('/stockPage/:name', (request, response)=>{
 	response.render("stockPage", {stock1: stocks[0],
 								stock2: stocks[1],
@@ -121,20 +119,20 @@ app.get('/stockPage/:name', (request, response)=>{
 								title: request.params.name});
 });
 
-// resolve log in
+// Resolve log in
 app.post('/loginProcess', (request, response)=>{
 	let username = request.body.username;
 	let password = request.body.password;
 	
-	// looks for username
+	// Looks for username
 	User.find({username: username}).then(function(results) {
 		if (results.length == 0) {
-			// if username not found
+			// If username not found
 		  	response.render('login', {systemMessage: 'Incorrect Username or Password!'});
 		} else {
-			// compares passwords
+			// Compares passwords
 		  if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-			// if password is the same
+			// If password is the same
 			request.session.username = username;
 			
 			stocks[0] = results[0].stock1;
@@ -144,7 +142,7 @@ app.post('/loginProcess', (request, response)=>{
 											stock2: stocks[1],
 											stock3: stocks[2]});
 		  } else {
-			  // if password is incorrect
+			  // If password is incorrect
 			response.render('login', {systemMessage: 'Incorrect Username or Password!'});
 		  }
 		}
@@ -152,7 +150,7 @@ app.post('/loginProcess', (request, response)=>{
 	
 });
 
-//Get user stock list
+// Get user stock list
 app.get("/api/getStock", (request, response) =>{
     var session = request.session;
     User.find({
@@ -171,7 +169,7 @@ app.get("/api/getStock", (request, response) =>{
     });
 });
 
-// updates the stock shortcuts
+// Updates the stock shortcuts
 app.post('/updateStock', (request, response) =>{
 	var session = request.session;
 	console.log(request.body);
@@ -198,7 +196,7 @@ app.get('/logout', (request, response)=>{
 	response.redirect("/");
 });
 
-// setting port
+// Setting port
 app.set('port', 3000);
 
 app.listen(app.get('port'), ()=>{
