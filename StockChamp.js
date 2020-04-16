@@ -21,7 +21,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-var storedUsers = ["JoeSmith123", "Ken", "admin"]
+var stocks = ["", "", ""];
 
 //Set view engines
 app.set('views', __dirname + '/views');
@@ -137,16 +137,16 @@ app.get('/stockPage', (request, response)=>{
 
 // change to search page
 app.get('/searchPage', (request, response)=>{
-	response.render('searchPage', {stock1: request.session.stock1,
-									stock2: request.session.stock2,
-									stock3: request.session.stock3});
+	response.render('searchPage', {stock1: stocks[0],
+									stock2: stocks[1],
+									stock3: stocks[2]});
 });
 
 // get to the appropriate stockPage
 app.get('/stockPage/:name', (request, response)=>{
-	response.render("stockPage", {stock1: request.session.stock1,
-								stock2: request.session.stock2,
-								stock3: request.session.stock3,
+	response.render("stockPage", {stock1: stocks[0],
+								stock2: stocks[1],
+								stock3: stocks[2],
 								title: request.params.name});
 });
 
@@ -163,12 +163,16 @@ app.post('/loginProcess', (request, response)=>{
 
 			//console.log(results[0].stock3);
 			request.session.username = username;
-			request.session.stock1 = results[0].stock1;
+/*			request.session.stock1 = results[0].stock1;
 			request.session.stock2 = results[0].stock2;
-			request.session.stock3 = results[0].stock3;
-			response.render('searchPage', {stock1: results[0].stock1,
-											stock2: results[0].stock2,
-											stock3: results[0].stock3});
+			request.session.stock3 = results[0].stock3;*/
+			
+			stocks[0] = results[0].stock1;
+			stocks[1] = results[0].stock2;
+			stocks[2] = results[0].stock3;
+			response.render('searchPage', {stock1: stocks[0],
+											stock2: stocks[1],
+											stock3: stocks[2]});
 		  } else {
 			response.render('login', {systemMessage: 'Incorrect Password!'});
 		  }
@@ -212,6 +216,17 @@ app.post('/updateStock', (request, response) =>{
 		}}
 		
 	);
+	stocks[0] = request.body[0].stock1;
+	stocks[1] = request.body[0].stock2;
+	stocks[2] = request.body[0].stock3;
+});
+
+app.get('/logout', (request, response)=>{
+	stocks[0] = "";
+	stocks[1] = "";
+	stocks[2] = "";
+	request.session.username = "";
+	response.redirect("/");
 });
 
 app.set('port', 3000);
