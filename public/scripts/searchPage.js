@@ -24,7 +24,6 @@ window.onload = function(){
         stock3 = value[0].stock3;
         this.buildPage(value);
     });
-    
 };
 
 /**
@@ -47,19 +46,42 @@ function buildPage(userData){
     var searchBar = document.getElementById("searchBar");
     var searchButton = document.getElementById("searchButton");
     var submitButton = document.getElementById("updateStock");
+    var dropdownMenu = document.getElementById("searchDropdown");
+    dropdownMenu.style.display = "none";
 
     //process search on button click
     $(searchButton).click(function() {
         processSearch(searchBar.value, userData);
+        dropdownMenu.style.display = "none"; //hide dropdown
     });
+
+    //create worker for search
+    let searchWorker = new Worker('/scripts/searchWorker.js');
+
+    searchWorker.onmessage = function(event) {
+        //get worker response
+        let workerResults = event.data;
+        buildDropdown(workerResults);
+    };
 
     //process search on enter press in search bar
     $(searchBar).on('keypress', function(e) {
         if (e.which == 13){
             processSearch(searchBar.value, userData);
+            dropdownMenu.style.display = "none";
         }
+
+        dropdownMenu.style.display = "block"; //hide dropdown
+        
+        //send worker a message with updated field
+        searchWorker.postMessage(searchBar.value);
+        
     });
+
     
+
+    console.log('Started worker thread.');
+
     //submit new stocks when submit button is clicked
     $(submitButton).click(function() {
 
@@ -83,7 +105,8 @@ function buildPage(userData){
         .catch(function(error) {
             console.log(error);
         });
-
+        
+        searchWorker.terminate(); //terminate worker
         location.reload(true); //reload the page to update stocks
     });
 }
@@ -261,3 +284,31 @@ var unhighlightButtons = function(buttons){
         button[0].className = "button is-info is-light";
     });
 };
+
+/**
+ * Builds search result dropdown menu
+ * @param {*} searchResults 
+ */
+var buildDropdown = function(searchResults){
+    var dropdownMenu = document.getElementById("searchDropdown");
+    var searchBar = document.getElementById("searchBar");
+
+    dropdownMenu.innerHTML = ""; //reset dropdown menu content
+
+    //create a new entry for each result
+    searchResults.forEach(result => {
+        var newItem = document.createElement('a');
+        newItem.innerHTML = result['1. symbol'];
+        newItem.className = "dropdown-item";
+        dropdownMenu.appendChild(newItem);
+
+        //set searchbar value to dropdown item when clicked
+        $(newItem).click(function() {
+           searchBar.value = newItem.innerHTML;
+           dropdownMenu.style.display = "none";
+        });
+
+    });
+
+
+}

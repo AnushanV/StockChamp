@@ -16,11 +16,17 @@ block content
         label(class="label") Search For Stocks
 		
         // Search bar
-        div(class="field has-addons")
-            div(class="control is-expanded")
-                input(id="searchBar" class="input" type="text" placeholder="ABC")
-            div(class="control")
-                a(class="button is-info" id="searchButton") Search
+        div(class="container is-widescreen")
+            div(class="dropdown is-active")
+                div(class="dropdown-trigger")
+                    div(class="field has-addons")
+                        div(class="control is-expanded")
+                            input(id="searchBar" class="input" type="text" placeholder="ABC")
+                        div(class="control")
+                            a(class="button is-info" id="searchButton") Search
+                    div(class="dropdown-menu")
+                        div(class="dropdown-content" id="searchDropdown")
+                        
 		
     // Search Results	
     div(id="resultContent")
