@@ -12,7 +12,7 @@ block scripts
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css')
 	
 block content
-    div(id="searchContent")
+    div(id="searchContent" class="topPadding")
         label(class="label") Search For Stocks
 		
         // Search bar
@@ -21,10 +21,11 @@ block content
                 input(id="searchBar" class="input" type="text" placeholder="ABC")
             div(class="control")
                 a(class="button is-info" id="searchButton") Search
-				
-        // Submit button
-        button(id="updateStock" action="/updateStock" class= "button is-info is-light") Submit
 		
     // Search Results	
     div(id="resultContent")
         table(class="table is-fullwidth is-hoverable is-scrollable" id="searchResults")
+	
+    div(id="submitButton")
+        // Submit button
+        button(id="updateStock" action="/updateStock" class= "button is-info") Submit

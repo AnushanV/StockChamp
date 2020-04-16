@@ -1,8 +1,14 @@
 #searchContent {
-    padding: 2rem 5rem 0 5rem;
+	padding-right: 5rem;
+	padding-bottom: 0;
+	padding-left: 5rem;
 }
 
 #resultContent {
     padding: 2rem;
     overflow: auto;
+}
+
+#submitButton{
+	text-align: center;
 }

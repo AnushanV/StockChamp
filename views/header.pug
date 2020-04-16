@@ -8,7 +8,7 @@ html
 		script(src='/../scripts/header.js' type='text/javascript')
 		block scripts
 	body
-		nav(class="navbar" role="navigation" aria-label="main navigation")
+		nav(id="navigationBar" class="navbar is-fixed-top" role="navigation" aria-label="main navigation")
 			div(class="navbar-brand")
 			
 				// Logo
@@ -27,7 +27,7 @@ html
 			
 			// Logout
 			div(class="navbar-end")
-				a(class="control has-icon navbar-item" href="/")
-					i(class="fa fa-sign-out-alt fa-2x")
+				a(class="control has-icon navbar-item" href="/" id="logout")
+					i(class="fa fa-sign-out-alt fa-2x" style="color:#0179DE")
 
 		block content

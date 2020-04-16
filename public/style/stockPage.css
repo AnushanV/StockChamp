@@ -1,6 +1,7 @@
 #newsColumn {
     overflow: auto;
     max-height: 100vh;
+	background-color: white;
 }
 
 #newsHeader {
@@ -13,4 +14,12 @@
 
 .card {
     padding:0.5rem;
+}
+
+#stockChart{
+	margin-bottom: 4rem;
+}
+
+#timeButtons{
+	justify-content: center;
 }
