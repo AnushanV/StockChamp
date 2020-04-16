@@ -7,6 +7,13 @@ Final Project for CSCI 3230U
 * Ken Zhou
 * Anushan Vimalathasan
 
+## Project Description
+(Work In Progress)
+
+## Requirements
+* Node.js (npm included)
+* MongoDB (choose to install MongoCompass during the installation)
+
 ## Setting up the environment
 1. Clone the repo
 2. Open Powershell in project folder and enter the following commands in the exact order : 
