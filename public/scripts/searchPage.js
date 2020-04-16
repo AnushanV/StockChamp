@@ -64,18 +64,17 @@ function buildPage(userData){
         buildDropdown(workerResults);
     };
 
-    //process search on enter press in search bar
+    //process search on enter press in search bar or update worker
     $(searchBar).on('keypress', function(e) {
         if (e.which == 13){
-            processSearch(searchBar.value, userData);
             dropdownMenu.style.display = "none";
+            processSearch(searchBar.value, userData);
         }
-
-        dropdownMenu.style.display = "block"; //hide dropdown
-        
-        //send worker a message with updated field
-        searchWorker.postMessage(searchBar.value);
-        
+        else{ 
+            dropdownMenu.style.display = "block"; //hide dropdown
+            //send worker a message with updated field
+            searchWorker.postMessage(searchBar.value);
+        }
     });
 
     
