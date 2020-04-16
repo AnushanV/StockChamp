@@ -1,7 +1,8 @@
-#searchContent{
+#searchContent {
     padding: 2rem 5rem 0 5rem;
 }
-#resultContent{
+
+#resultContent {
     padding: 2rem;
     overflow: auto;
 }

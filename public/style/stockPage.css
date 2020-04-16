@@ -1,16 +1,16 @@
-#newsColumn{
+#newsColumn {
     overflow: auto;
     max-height: 100vh;
 }
 
-#newsHeader{
+#newsHeader {
     padding-left: 1rem;
 }
 
-#buttonTitle{
+#buttonTitle {
     text-align: center;
 }
-.card{
+
+.card {
     padding:0.5rem;
 }
-
