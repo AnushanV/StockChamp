@@ -30,7 +30,9 @@ In the future, users can edit their subscriptions at any time.
 
 ## Notes
 1. Since we do not have the paid version of the stocks API we're using, we can only request from the free API **5 times per minute**. 
-If you try to request more than that from the API on our stock page by **changing the time interval or generating a new stock page too many times within a minute, it will fail to load the graph.**
+  * If you try to request more than that from the API on our stock page by **changing the time interval or generating a new stock page too many times within a minute, it will fail to load the graph.**
+  * If you **change the value in the search field or search too many times (roughly around 3 to 4 times per minute), the dropdown and the search will not work.**
+  * If either of the cases above happen, just **wait for around 1 to 2 minutes and reload the pages** so that the API will refresh the request limit.
 
 2. The news column searches news using the stock symbol, so the **results may not match the company if the company not well known.**
 
