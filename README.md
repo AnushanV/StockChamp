@@ -16,6 +16,10 @@ In the future, users can edit their subscriptions at any time.
 * Node.js (npm included)
 * MongoDB (choose to install MongoCompass during the installation)
 
+## Powered By
+* [Alpha Vantage](https://www.alphavantage.co/) 
+* [News API](https://newsapi.org/)
+
 ## Setting up the environment
 1. Clone the repo
 2. Open Powershell in project folder and enter `npm install`
@@ -25,6 +29,17 @@ In the future, users can edit their subscriptions at any time.
 6. To view detailed info about user data, open MongoCompass
 
 ## Notes
-Since we do not have the paid version of the stocks API we're using, we can only request from the free API **5 times per minute**. 
-
+1. Since we do not have the paid version of the stocks API we're using, we can only request from the free API **5 times per minute**. 
 If you try to request more than that from the API on our stock page by **changing the time interval or generating a new stock page too many times within a minute, it will fail to load the graph.**
+
+2. The news column searches news using the stock symbol, so the **results may not match the company if the company not well known.**
+
+## References
+Some references were used to learn how to do things, and we tried to expand on the code that we referenced.
+
+ 1. Making sure the database info was received before the data was used:
+   * https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
+ 2. Making line graph:
+   * https://www.d3-graph-gallery.com/graph/line_cursor.html
+   * https://bl.ocks.org/d3noob/402dd382a51a4f6eea487f9a35566de0
+   
