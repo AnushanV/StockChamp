@@ -118,7 +118,7 @@ function buildPage(userData){
 async function processSearch(searchQuery, userData){
     
     //get link to alphavantage api
-    var apiKey = "KA26ULAWH85VJQEN";
+    var apiKey = "INSERT API KEYS HERE";
     var apiLink = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchQuery}&apikey=${apiKey}`
 
     var searchResults = document.getElementById("searchResults");
